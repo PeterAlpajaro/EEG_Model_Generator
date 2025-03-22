@@ -18,8 +18,8 @@ const Index = () => {
             className={`page-title ${loaded ? 'opacity-100' : 'opacity-0'}`}
             style={{ animationDelay: '300ms' }}
           >
-            <span className="font-extralight">EMG</span>
-            <span className="text-maroon"> creator</span>
+            <span className="text-maroon">Ez-G</span>
+            <span className="font-extralight"> creator</span>
           </h1>
           
           {/* Subtle decoration element */}
