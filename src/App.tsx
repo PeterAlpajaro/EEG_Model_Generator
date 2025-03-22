@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Enter from "./pages/Enter";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
+import Result from "./pages/Result";
 
 // AnimationWrapper component to handle route transitions
 const AnimationWrapper = () => {
@@ -21,6 +22,7 @@ const AnimationWrapper = () => {
         <Route path="/" element={<Index />} />
         <Route path="/enter" element={<Enter />} />
         <Route path="/about" element={<About />} />
+        <Route path="/result" element={<Result />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
