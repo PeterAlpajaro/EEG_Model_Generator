@@ -1,13 +1,40 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React, { useEffect, useState } from 'react';
+import NavButton from '@/components/NavButton';
+import PageTransition from '@/components/PageTransition';
 
 const Index = () => {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <PageTransition>
+      <div className="page-container">
+        <div className="relative">
+          <h1 
+            className={`page-title ${loaded ? 'opacity-100' : 'opacity-0'}`}
+            style={{ animationDelay: '300ms' }}
+          >
+            <span className="font-extralight">EMG</span>
+            <span className="text-maroon"> creator</span>
+          </h1>
+          
+          {/* Subtle decoration element */}
+          <div className="absolute -bottom-3 left-0 w-20 h-[1px] bg-gradient-to-r from-maroon to-transparent"></div>
+        </div>
+
+        <div 
+          className={`button-container ${loaded ? 'opacity-100' : 'opacity-0'}`} 
+          style={{ animationDelay: '600ms' }}
+        >
+          <NavButton to="/enter">Enter</NavButton>
+          <NavButton to="/about">About</NavButton>
+        </div>
       </div>
-    </div>
+    </PageTransition>
   );
 };
 
