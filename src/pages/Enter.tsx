@@ -32,6 +32,11 @@ const Enter = () => {
         toast.error('Please upload an STL file for 3D Head');
         return;
       }
+      
+      // Store the STL file URL in localStorage for demo purposes
+      const fileUrl = URL.createObjectURL(file);
+      localStorage.setItem('headModel', fileUrl);
+      
       setHeadModel(file);
       toast.success('3D head model uploaded successfully');
     }
