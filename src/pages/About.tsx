@@ -10,7 +10,7 @@ const About = () => {
         <div className="relative">
           <h1 className="page-title">
             <span className="font-extralight">About </span>
-            <span className="text-maroon">EMG creator</span>
+            <span className="text-maroon">Ez-G creator</span>
           </h1>
           
           {/* Subtle decoration element */}
@@ -21,8 +21,8 @@ const About = () => {
           <div className="glass p-8 opacity-0 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
             <h2 className="text-xl text-maroon mb-3 font-light">Our Mission</h2>
             <p className="font-light leading-relaxed">
-              The EMG creator platform is designed to provide a seamless experience for professionals 
-              working with electromyography data. Our minimalist approach focuses on functionality 
+              The Ez-G creator platform is designed to provide a seamless experience for professionals 
+              working with electroencephalography (EEG) data. Our minimalist approach focuses on functionality 
               and ease of use without unnecessary distractions.
             </p>
           </div>
@@ -32,7 +32,7 @@ const About = () => {
             <p className="font-light leading-relaxed">
               Built with attention to detail and a focus on user experience, our platform embraces 
               the philosophy that good design is as little design as possible. Every element serves a purpose,
-              creating an environment where your work takes center stage.
+              creating an environment where your EEG analysis work takes center stage.
             </p>
           </div>
         </div>
