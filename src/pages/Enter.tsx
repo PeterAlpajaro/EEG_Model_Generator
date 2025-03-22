@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import NavButton from '@/components/NavButton';
 import PageTransition from '@/components/PageTransition';
 import { Button } from '@/components/ui/button';
-import { Upload, File3d } from 'lucide-react';
+import { Upload, FileCode } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
 
@@ -109,7 +109,7 @@ const Enter = () => {
               <div className={`border-2 border-dashed rounded-lg p-8 flex flex-col items-center justify-center min-h-[200px] transition-all ${headModel ? 'border-maroon/50' : 'border-gray-700'}`}>
                 {headModel ? (
                   <div className="flex flex-col items-center">
-                    <File3d className="h-16 w-16 text-maroon mb-4" />
+                    <FileCode className="h-16 w-16 text-maroon mb-4" />
                     <p className="text-sm text-muted-foreground mb-2">{headModel.name}</p>
                     <Button 
                       variant="outline" 
@@ -121,7 +121,7 @@ const Enter = () => {
                   </div>
                 ) : (
                   <>
-                    <File3d className="mb-4 h-10 w-10 text-maroon/60" />
+                    <FileCode className="mb-4 h-10 w-10 text-maroon/60" />
                     <p className="mb-2 text-center">Upload an STL file for 3D head</p>
                     <Button asChild variant="outline" className="relative">
                       <label>
