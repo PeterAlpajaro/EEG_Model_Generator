@@ -2,11 +2,13 @@ from flask import Flask, render_template, request, redirect, url_for
 import os
 import signal
 import sys
+from flask_cors import CORS
 from pipeline import create_electrodes_stl
 
 request_number = 0
 
 app = Flask(__name__)
+CORS(app)
 UPLOAD_FOLDER = 'input_gltf'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
