@@ -75,7 +75,8 @@ def find_nose_and_back_of_head(vertices, neck_height, midline_tolerance=0.2, vis
     # Find the back of the head (minimum x-coordinate)
     back_head_index = np.argmin(vertices_midline[:, 0])
     back_head_point = vertices_midline[back_head_index]
-    
+
+
     return nose_point, back_head_point
 
 def align_points(original_pts, ref_A, ref_B):
@@ -193,9 +194,21 @@ def get_scaled_reference_points(stl_file, original_pts):
     print(vertices)    
     
     neck_height = find_neck_y(vertices)
+
+    #Now we want to reorient the model so that the nasion is facing towards the postiive x-axis
+    #and the inion is facing towards the negative x-axis.
+
+    # We can determine which axis is shoulder-left-to-right by finding the extremeities distances.
+
+    if shoulder_along_z():
+        # Rotate the model so that the nasion is facing towards postive/negative x-axis
+        D = np.array([0, 0, 1])
+
     
     nose, back_head = find_nose_and_back_of_head(vertices, neck_height)
     
+    print("Nose, back of head found, moving on")   
+
     if nose is not None and back_head is not None:
         print(f"Nose point: {nose}")
         print(f"Back of head point: {back_head}")
@@ -211,36 +224,51 @@ def get_scaled_reference_points(stl_file, original_pts):
     # Align the points to the reference positions
     new_pts = align_points(original_pts, ref_A, ref_D)
 
+    print("Points Scaled, saving to aligned_points.xyz")
+
     # Save the aligned points
     np.savetxt("aligned_points.xyz", new_pts)
 
     # VISUALIZATION -----------------------------------------------------------
 
-    # Display the aligned points in 3D along with the original Mesh.
+    # # Display the aligned points in 3D along with the original Mesh.
 
-    # Display the mesh
-    mesh = stl_reader.read_as_mesh(stl_file)
-    plotter = pv.Plotter()
-    plotter.add_mesh(mesh, opacity=0.5)
+    # # Display the mesh
+    # mesh = stl_reader.read_as_mesh(stl_file)
+    # plotter = pv.Plotter()
+    # plotter.add_mesh(mesh, opacity=0.5)
             
-    # Neck plane visualization
-    bounds = mesh.bounds
-    neck_plane = pv.Plane(
-        center=[(bounds[0]+bounds[1])/2, neck_height, (bounds[4]+bounds[5])/2],
-        direction=[0, 1, 0],
-        i_size=(bounds[1]-bounds[0])*1.2,
-        j_size=(bounds[5]-bounds[4])*1.2
-        )
-    plotter.add_mesh(neck_plane, color='red', opacity=0.3)
+    # # Neck plane visualization
+    # bounds = mesh.bounds
+    # neck_plane = pv.Plane(
+    #     center=[(bounds[0]+bounds[1])/2, neck_height, (bounds[4]+bounds[5])/2],
+    #     direction=[0, 1, 0],
+    #     i_size=(bounds[1]-bounds[0])*1.2,
+    #     j_size=(bounds[5]-bounds[4])*1.2
+    #     )
+    # plotter.add_mesh(neck_plane, color='red', opacity=0.3)
 
-    labels = ["Nasion", "Preauricular L", "Preauricular R", "Inion"]
+    # labels = ["Nasion", "Preauricular L", "Preauricular R", "Inion"]
 
-    # Add aligned points
-    i = 0
-    for point in new_pts: 
-        plotter.add_mesh(pv.PolyData([point]), color='green', point_size=10)
-        plotter.add_point_labels([point], [labels[i]], font_size=14)
-        i+=1
-    plotter.show()
+    # # Add aligned points
+    # i = 0
+    # for point in new_pts: 
+    #     plotter.add_mesh(pv.PolyData([point]), color='green', point_size=10)
+    #     plotter.add_point_labels([point], [labels[i]], font_size=14)
+    #     i+=1
+    # plotter.show()
 
     # ---------------------------------------------------------------------------
+    return 3
+
+
+# Determine whether the shoulders are along the z-axis
+def shoulder_along_z(vertices):
+    # We can check this by finding the distance along z and seeing if the maximum is larger than the distance along x.
+    #First, sort the vertices by y
+    sorted_vertices_y = vertices[vertices[:, 1].argsort()]
+    #Now, in blocks, find the z and x distance between points.
+
+    #Finally, take this data and 
+
+    return false;

@@ -28,13 +28,10 @@ def find_reference_points(xyz_data):
 
     reference_points_dictionary = {"Nasion": nasion, "Left Preauricular": left_preauricular, "Right Preauricular": right_preauricular, "Inion": inion}
 
-    pcd = o3d.geometry.PointCloud()
-    pcd.points = o3d.utility.Vector3dVector(reference_points)
-
     # Create labels and adjust parameters
     labels = create_labels(reference_points_dictionary, scale=0.5, offset=5)
 
-    o3d.visualization.draw_geometries([pcd] + labels, mesh_show_back_face=True)
+    #o3d.visualization.draw_geometries([pcd] + labels, mesh_show_back_face=True)
     print(reference_points.shape)
 
     save_to_xyz(reference_points, "reference_points.xyz")

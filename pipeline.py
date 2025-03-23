@@ -19,10 +19,12 @@ def create_electrodes_stl(glb_file_path, image_file_path):
     # Scale the reference points to the size of the head in the STL file
     scaled_ref_points = get_scaled_reference_points(stl_file_path, ref_points)
 
+    print("End Reached")
     # Generate the electrode STL files based on the scaled reference points and the STL file
     #TODO: Integrate from Jeremy.
 
     # Return the path to the electrode STL File.
+    return stl_file_path, stl_file_path
 
 if __name__ == "__main__":
     create_electrodes_stl("input_gltf/peter_test.glb", "input_png/000002.jpg")
