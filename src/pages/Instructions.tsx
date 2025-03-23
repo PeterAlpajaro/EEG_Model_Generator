@@ -94,59 +94,67 @@ const Instructions = () => {
                   {/* STEP 1: Facial Landmark Detection (Front View) */}
                   {currentStep === 0 && (
                     <>
-                      {/* White face template overlay */}
+                      {/* Face background image */}
                       <div 
                         className="absolute inset-0 bg-contain bg-center bg-no-repeat"
                         style={{ 
-                          backgroundImage: "url('/models/white-face-template.png')", 
-                          opacity: 0.9,
-                          mixBlendMode: "lighten"
+                          backgroundImage: "url('/models/face-photo.png')", 
+                          opacity: 0.9
                         }}
                       />
                       
-                      {/* Add black landmark dots on the white face template */}
+                      {/* Add landmark dots sequentially appearing on the face */}
                       {[
-                        [38, 40], [62, 40], // eyes
-                        [50, 45], // nose
-                        [40, 58], [60, 58], // mouth corners
-                        [50, 60], // bottom lip
-                        [28, 35], [72, 35], // temples
-                        [30, 65], [70, 65], // jaw
-                        [50, 25], // forehead
-                        [50, 75], // chin
+                        [38, 40, 'Eyes'], [62, 40, 'Eyes'], // eyes
+                        [50, 45, 'Nose'], // nose
+                        [40, 58, 'Mouth'], [60, 58, 'Mouth'], // mouth corners
+                        [50, 60, 'Mouth'], // bottom lip
+                        [28, 35, 'Temple'], [72, 35, 'Temple'], // temples
+                        [30, 65, 'Jaw'], [70, 65, 'Jaw'], // jaw
+                        [50, 25, 'Forehead'], // forehead
+                        [50, 75, 'Chin'], // chin
                       ].map((pos, i) => (
                         <motion.div 
                           key={`landmark-${i}`}
-                          className="absolute w-2.5 h-2.5 bg-black rounded-full"
+                          className="absolute w-2.5 h-2.5 bg-maroon rounded-full"
                           style={{ 
                             left: `${pos[0]}%`, 
                             top: `${pos[1]}%`,
                             transform: 'translate(-50%, -50%)',
-                            border: '1px solid rgba(255,255,255,0.6)',
-                            boxShadow: "0 0 3px 1px rgba(0,0,0,0.6)"
+                            border: '1px solid rgba(255,255,255,0.8)',
+                            boxShadow: "0 0 5px 2px rgba(255,100,100,0.4)"
                           }}
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
                           transition={{ duration: 0.5, delay: 0.5 + (i * 0.1) }}
-                        />
+                        >
+                          <motion.div
+                            className="absolute -top-6 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-black/50 text-white text-xs px-2 py-0.5 rounded"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.3, delay: 0.5 + (i * 0.1) + 0.2 }}
+                          >
+                            {pos[2]}
+                          </motion.div>
+                        </motion.div>
                       ))}
                       
-                      {/* Add connecting lines between important landmarks */}
+                      {/* Connect landmarks with animated lines */}
                       <motion.div
                         className="absolute w-full h-full pointer-events-none"
                         initial={{ opacity: 0 }}
-                        animate={{ opacity: 0.7 }}
-                        transition={{ delay: 1.5, duration: 0.8 }}
+                        animate={{ opacity: 0.8 }}
+                        transition={{ delay: 1.7, duration: 0.8 }}
                       >
                         <svg width="100%" height="100%" className="absolute inset-0">
                           <motion.path 
-                            d="M38,40 L50,45 L62,40 M50,45 L50,60" 
-                            stroke="rgba(0,0,0,0.7)"
-                            strokeWidth="1"
+                            d="M38,40 L50,45 L62,40 M50,45 L50,60 M28,35 C40,55 60,55 72,35 M30,65 C40,75 60,75 70,65" 
+                            stroke="rgba(136, 19, 55, 0.7)"
+                            strokeWidth="1.5"
                             fill="none"
                             initial={{ pathLength: 0 }}
                             animate={{ pathLength: 1 }}
-                            transition={{ duration: 1.5, delay: 1.5 }}
+                            transition={{ duration: 1.5, delay: 1.7 }}
                           />
                         </svg>
                       </motion.div>
@@ -181,7 +189,7 @@ const Instructions = () => {
                     </>
                   )}
                   
-                  {/* STEP 3: EEG Sensor Placement (Isometric View) */}
+                  {/* STEP 3: EEG Sensor Placement (3D Model View) */}
                   {currentStep === 2 && (
                     <>
                       <motion.div 
@@ -191,22 +199,20 @@ const Instructions = () => {
                         transition={{ duration: 0.6 }}
                       />
                       
-                      {/* Subtle grid to emphasize 3D surface */}
-                      {[...Array(4)].map((_, i) => (
-                        <motion.div 
-                          key={`eeg-grid-${i}`}
-                          className="absolute h-[80%] w-[1px] bg-white/10"
-                          style={{ 
-                            left: `${30 + i * 13}%`, 
-                            top: '10%',
-                          }}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ duration: 0.5, delay: 0.3 }}
-                        />
-                      ))}
+                      {/* Replace with a more detailed 3D head model background */}
+                      <div 
+                        className="absolute inset-0 w-full h-full bg-center"
+                        style={{ 
+                          backgroundImage: "url('/models/3d-head-model.png')",
+                          backgroundSize: "cover",
+                          backgroundPosition: "center center",
+                          opacity: 1,
+                          filter: "brightness(1.05) contrast(1.1)",
+                          transition: "all 1s ease-in-out"
+                        }}
+                      />
                       
-                      {/* EEG sensors placement on the 3D isometric head */}
+                      {/* EEG sensors placement with labels on the 3D head */}
                       {[
                         // Frontal sensors
                         [38, 20, 'Fp1'], [48, 18, 'Fpz'], [58, 19, 'Fp2'],
@@ -221,43 +227,72 @@ const Instructions = () => {
                       ].map((sensor, i) => (
                         <React.Fragment key={`eeg-sensor-${i}`}>
                           <motion.div 
-                            className="absolute w-3 h-3 bg-white/90 border border-white rounded-full flex items-center justify-center"
+                            className="absolute w-4 h-4 bg-white/90 border-2 border-maroon/70 rounded-full flex items-center justify-center"
                             style={{ 
                               left: `${sensor[0]}%`, 
                               top: `${Number(sensor[1])}%`,
                               transform: 'translate(-50%, -50%)',
-                              boxShadow: "0 0 6px 2px rgba(255,255,255,0.2)"
+                              boxShadow: "0 0 8px 3px rgba(255,255,255,0.3)"
                             }}
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             transition={{ duration: 0.6, delay: 0.5 + (i * 0.07) }}
                           >
                             <motion.div 
-                              className="w-1.5 h-1.5 bg-white rounded-full"
+                              className="w-2 h-2 bg-maroon rounded-full"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: 0.5 + (i * 0.07) + 0.1 }}
                             />
                           </motion.div>
+                          
+                          {/* Add sensor label */}
+                          <motion.div
+                            className="absolute text-xs font-semibold px-1.5 py-0.5 bg-black/60 text-white rounded"
+                            style={{ 
+                              left: `${sensor[0]}%`, 
+                              top: `${Number(sensor[1]) - 6}%`,
+                              transform: 'translate(-50%, -50%)'
+                            }}
+                            initial={{ opacity: 0, y: 5 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4, delay: 0.5 + (i * 0.07) + 0.3 }}
+                          >
+                            {sensor[2]}
+                          </motion.div>
                         </React.Fragment>
                       ))}
                       
-                      {/* Connection lines between EEG sensors */}
+                      {/* Add connecting lines between EEG sensors to show the 10-20 system */}
                       <motion.div
-                        className="absolute w-full h-full"
-                        style={{ left: 0, top: 0 }}
+                        className="absolute w-full h-full pointer-events-none"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 0.7 }}
+                        transition={{ delay: 2.5, duration: 0.8 }}
                       >
-                        <svg width="100%" height="100%" viewBox="0 0 100 100" className="absolute inset-0">
+                        <svg width="100%" height="100%" className="absolute inset-0">
                           <motion.path 
-                            d="M 48 18 L 42 27 L 48 38 L 55 27 Z M 48 38 L 48 52" 
-                            stroke="rgba(255,255,255,0.4)"
-                            strokeWidth="0.8"
+                            d="M38,20 L48,18 L58,19 M33,30 L42,27 L48,25 L55,27 L63,30 M30,43 L40,40 L48,38 L57,40 L67,43 M35,55 L48,52 L62,55 M48,18 L48,25 L48,38 L48,52 L48,65" 
+                            stroke="rgba(136, 19, 55, 0.6)"
+                            strokeWidth="1"
+                            strokeDasharray="5,3"
                             fill="none"
-                            initial={{ pathLength: 0, opacity: 0 }}
-                            animate={{ pathLength: 1, opacity: 1 }}
-                            transition={{ duration: 1.5, delay: 2 }}
+                            initial={{ pathLength: 0 }}
+                            animate={{ pathLength: 1 }}
+                            transition={{ duration: 2, delay: 2.5 }}
                           />
                         </svg>
+                      </motion.div>
+                      
+                      {/* Information callout */}
+                      <motion.div
+                        className="absolute bottom-5 right-5 bg-black/70 text-white p-3 rounded-lg max-w-[150px] text-xs"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 3, duration: 0.5 }}
+                      >
+                        <div className="font-semibold mb-1">10-20 System</div>
+                        <div className="text-xs opacity-80">International standard for EEG electrode placement</div>
                       </motion.div>
                     </>
                   )}
@@ -314,8 +349,8 @@ const Instructions = () => {
         </div>
         
         <div className="flex justify-between w-full max-w-4xl mx-auto mt-8 mb-8">
-          <NavButton to="/welcome">Previous</NavButton>
-          <NavButton to="/upload">Continue</NavButton>
+          <NavButton to="/">Previous</NavButton>
+          <NavButton to="/enter">Continue</NavButton>
         </div>
       </div>
     </PageTransition>

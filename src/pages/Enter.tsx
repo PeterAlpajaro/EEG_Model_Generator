@@ -27,8 +27,8 @@ const Enter = () => {
   const handleHeadUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      if (!file.name.endsWith('.stl')) {
-        toast.error('Please upload an STL file for 3D Head');
+      if (!file.name.endsWith('.glb')) {
+        toast.error('Please upload a GLB file for 3D Head');
         return;
       }
       
@@ -41,11 +41,11 @@ const Enter = () => {
       // Create a new blob URL
       const blobUrl = URL.createObjectURL(new Blob([file], { type: 'application/octet-stream' }));
       console.log("Created blob URL:", blobUrl);
-      localStorage.setItem('stlFile', blobUrl);
+      localStorage.setItem('glbFile', blobUrl);
       setHeadModel(file);
       
       // Verify the blob URL is stored
-      const storedUrl = localStorage.getItem('stlFile');
+      const storedUrl = localStorage.getItem('glbFile');
       console.log("Stored blob URL:", storedUrl);
       
       toast.success('3D head model uploaded successfully');
@@ -137,13 +137,13 @@ const Enter = () => {
                 ) : (
                   <>
                     <FileCode className="mb-4 h-10 w-10 text-maroon/60" />
-                    <p className="mb-2 text-center">Upload an STL file for 3D head</p>
+                    <p className="mb-2 text-center">Upload a GLB file for 3D head</p>
                     <Button asChild variant="outline" className="relative">
                       <label>
-                        <span>Select STL</span>
+                        <span>Select GLB</span>
                         <input 
                           type="file" 
-                          accept=".stl" 
+                          accept=".glb" 
                           className="absolute inset-0 w-full opacity-0 cursor-pointer" 
                           onChange={handleHeadUpload}
                         />
