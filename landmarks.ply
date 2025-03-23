@@ -1,0 +1,9 @@
+ply
+format ascii 1.0
+element vertex 2
+property float x
+property float y
+property float z
+end_header
+[ 126.       190.      -110.11475] [ 126.       218.      -111.53453] [ 133.       242.      -111.71499]
+[308.      237.      -63.54828] [322.      240.      -67.49789] [524.        96.       -71.659836]
