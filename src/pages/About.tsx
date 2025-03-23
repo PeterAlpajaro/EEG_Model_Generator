@@ -1,4 +1,3 @@
-
 import React from 'react';
 import NavButton from '@/components/NavButton';
 import PageTransition from '@/components/PageTransition';
@@ -7,17 +6,17 @@ const About = () => {
   return (
     <PageTransition>
       <div className="page-container">
-        <div className="relative">
+        <div className="relative flex justify-center w-full mt-auto">
           <h1 className="page-title">
             <span className="font-extralight">About </span>
             <span className="text-maroon">Ez-G creator</span>
           </h1>
           
-          {/* Subtle decoration element */}
-          <div className="absolute -bottom-3 left-0 w-20 h-[1px] bg-gradient-to-r from-maroon to-transparent"></div>
+          {/* Centered decoration element */}
+          <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-20 h-[1px] bg-gradient-to-r from-transparent via-maroon to-transparent"></div>
         </div>
 
-        <div className="max-w-2xl mx-auto grid gap-8 mt-8 mb-12">
+        <div className="max-w-2xl mx-auto grid gap-8 mt-8 mb-auto">
           <div className="glass p-8 opacity-0 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
             <h2 className="text-xl text-maroon mb-3 font-light">Our Mission</h2>
             <p className="font-light leading-relaxed">
@@ -37,7 +36,7 @@ const About = () => {
           </div>
         </div>
 
-        <div className="button-container">
+        <div className="button-container mb-auto">
           <NavButton to="/" className="text-maroon hover:text-maroon-300">
             Back to Home
           </NavButton>

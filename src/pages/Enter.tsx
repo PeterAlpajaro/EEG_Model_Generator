@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavButton from '@/components/NavButton';
@@ -33,11 +32,22 @@ const Enter = () => {
         return;
       }
       
-      // Store the STL file URL in localStorage for demo purposes
-      const fileUrl = URL.createObjectURL(file);
-      localStorage.setItem('headModel', fileUrl);
+      // Clean up any existing blob URL
+      const existingUrl = localStorage.getItem('stlFile');
+      if (existingUrl && existingUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(existingUrl);
+      }
       
+      // Create a new blob URL
+      const blobUrl = URL.createObjectURL(new Blob([file], { type: 'application/octet-stream' }));
+      console.log("Created blob URL:", blobUrl);
+      localStorage.setItem('stlFile', blobUrl);
       setHeadModel(file);
+      
+      // Verify the blob URL is stored
+      const storedUrl = localStorage.getItem('stlFile');
+      console.log("Stored blob URL:", storedUrl);
+      
       toast.success('3D head model uploaded successfully');
     }
   };
@@ -56,17 +66,17 @@ const Enter = () => {
   return (
     <PageTransition>
       <div className="page-container">
-        <div className="relative">
+        <div className="relative flex justify-center w-full mt-auto">
           <h1 className="page-title">
             <span className="text-maroon">Ez-G</span>
             <span className="font-extralight"> creator</span>
           </h1>
           
-          {/* Subtle decoration element */}
-          <div className="absolute -bottom-3 left-0 w-20 h-[1px] bg-gradient-to-r from-maroon to-transparent"></div>
+          {/* Centered decoration element */}
+          <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-20 h-[1px] bg-gradient-to-r from-transparent via-maroon to-transparent"></div>
         </div>
 
-        <div className="w-full max-w-3xl mx-auto glass p-8 mb-12 opacity-0 animate-fade-in" style={{ animationDelay: '400ms' }}>
+        <div className="w-full max-w-3xl mx-auto glass p-8 mb-auto opacity-0 animate-fade-in" style={{ animationDelay: '400ms' }}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Face Image Upload */}
             <Card className="p-6 border border-maroon/20 bg-black/40">

@@ -1,0 +1,74 @@
+/* Center titles */
+h1, h2, h3, h4, h5, h6 {
+  text-align: center;
+}
+
+/* Center buttons */
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+}
+
+/* For individual buttons */
+.centered-button {
+  display: block;
+  margin: 0 auto;
+}
+
+/* Center all document titles and EZ-G */
+.logo-title, 
+.document-title {
+  text-align: center;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Center all buttons in the document */
+.button-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;  /* Adds space between buttons if they're in a row */
+  width: 100%;
+  margin: 1rem 0;
+}
+
+/* For buttons that need to be stacked vertically */
+.button-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+/* Vertically center content containers */
+.vertical-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* Vertically centered content distribution */
+.content-vertical-balance {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  padding: 4rem 0;
+}
+
+/* Create space between title and content */
+.title-spacing {
+  margin-top: auto;
+  padding-top: 4rem;
+}
+
+/* Create space between content and footer/buttons */
+.footer-spacing {
+  margin-bottom: auto;
+  padding-bottom: 4rem;
+} 

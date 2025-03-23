@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import NavButton from '@/components/NavButton';
 import PageTransition from '@/components/PageTransition';
@@ -13,7 +12,7 @@ const Index = () => {
   return (
     <PageTransition>
       <div className="page-container">
-        <div className="relative">
+        <div className="relative flex justify-center w-full mt-auto">
           <h1 
             className={`page-title ${loaded ? 'opacity-100' : 'opacity-0'}`}
             style={{ animationDelay: '300ms' }}
@@ -22,12 +21,12 @@ const Index = () => {
             <span className="font-extralight"> creator</span>
           </h1>
           
-          {/* Subtle decoration element */}
-          <div className="absolute -bottom-3 left-0 w-20 h-[1px] bg-gradient-to-r from-maroon to-transparent"></div>
+          {/* Centered decoration element */}
+          <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-20 h-[1px] bg-gradient-to-r from-transparent via-maroon to-transparent"></div>
         </div>
 
         <div 
-          className={`button-container ${loaded ? 'opacity-100' : 'opacity-0'}`} 
+          className={`button-container mb-auto ${loaded ? 'opacity-100' : 'opacity-0'}`} 
           style={{ animationDelay: '600ms' }}
         >
           <NavButton to="/enter">Enter</NavButton>

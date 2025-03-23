@@ -1,0 +1,53 @@
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: #000;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  position: relative;
+  isolation: isolate;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.page-container {
+  position: relative;
+  z-index: 1;
+  background: transparent !important;
+}
+
+.backdrop-blur-sm {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Ensure proper stacking */
+.relative {
+  position: relative;
+}
+
+.z-10 {
+  z-index: 10;
+}
+
+/* Ensure backdrop blur works */
+@supports (backdrop-filter: blur(8px)) {
+  .backdrop-blur-sm {
+    backdrop-filter: blur(8px);
+  }
+} 
