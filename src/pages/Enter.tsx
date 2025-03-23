@@ -6,11 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Upload, FileCode } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
+import JSZip from 'jszip';
 
 const Enter = () => {
   const navigate = useNavigate();
   const [faceImage, setFaceImage] = useState<File | null>(null);
   const [headModel, setHeadModel] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   
   const handleFaceUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -33,7 +35,7 @@ const Enter = () => {
       }
       
       // Clean up any existing blob URL
-      const existingUrl = localStorage.getItem('stlFile');
+      const existingUrl = localStorage.getItem('glbFile');
       if (existingUrl && existingUrl.startsWith('blob:')) {
         URL.revokeObjectURL(existingUrl);
       }
@@ -52,15 +54,126 @@ const Enter = () => {
     }
   };
   
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!faceImage || !headModel) {
       toast.error('Please upload both a face image and a 3D head model');
       return;
     }
     
-    // In a real app, you would upload these files to a server
-    // For now, we'll just navigate to the result page
-    navigate('/result');
+    setIsUploading(true);
+    
+    try {
+      // Create FormData object
+      const formData = new FormData();
+      formData.append('file_glb', headModel);
+      formData.append('file_png', faceImage);
+      
+      toast.info('Uploading files to server for facial landmark detection...');
+      
+      // Send the files to the Flask API endpoint
+      const response = await fetch('http://localhost:8080/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (response.ok) {
+        toast.info('Processing facial landmarks...');
+        
+        // The Flask backend now returns a zip file with both STL files
+        const zipBlob = await response.blob();
+        
+        // Clean up any existing blob URLs
+        const existingUrls = ['personModelUrl', 'electrodeModelUrl'].map(key => localStorage.getItem(key));
+        existingUrls.forEach(url => {
+          if (url && url.startsWith('blob:')) {
+            URL.revokeObjectURL(url);
+          }
+        });
+        
+        // Process the zip file to extract both STL files
+        const zipFile = new JSZip();
+        const zipContents = await zipFile.loadAsync(zipBlob);
+        
+        console.log("Files in zip archive:", Object.keys(zipContents.files));
+        
+        // Look for the simple filenames that Flask is now using
+        const personFileName = "person.stl";
+        const electrodeFileName = "electrode.stl";
+        
+        // Check if both our expected files exist in the zip
+        const hasPersonFile = zipContents.files[personFileName];
+        const hasElectrodeFile = zipContents.files[electrodeFileName];
+        
+        if (hasPersonFile && hasElectrodeFile) {
+          // Extract and create blob URLs for both files
+          const personBlob = await zipContents.files[personFileName].async("blob");
+          const electrodeBlob = await zipContents.files[electrodeFileName].async("blob");
+          
+          const personUrl = URL.createObjectURL(personBlob);
+          const electrodeUrl = URL.createObjectURL(electrodeBlob);
+          
+          // Store the URLs in localStorage
+          localStorage.setItem('personModelUrl', personUrl);
+          localStorage.setItem('electrodeModelUrl', electrodeUrl);
+          
+          console.log("Created STL blob URLs:", personUrl, electrodeUrl);
+          
+          toast.success('Facial landmarks processed successfully!');
+          
+          // Navigate to the result page to show the processed models
+          navigate('/result');
+        } else {
+          // Fallback: Try to find any STL files in the zip
+          const stlFiles = Object.keys(zipContents.files).filter(name => 
+            name.toLowerCase().endsWith('.stl')
+          );
+          
+          console.log("STL files found in zip:", stlFiles);
+          
+          if (stlFiles.length >= 2) {
+            // Use the first two STL files we find
+            const personBlob = await zipContents.files[stlFiles[0]].async("blob");
+            const electrodeBlob = await zipContents.files[stlFiles[1]].async("blob");
+            
+            const personUrl = URL.createObjectURL(personBlob);
+            const electrodeUrl = URL.createObjectURL(electrodeBlob);
+            
+            // Store the URLs in localStorage
+            localStorage.setItem('personModelUrl', personUrl);
+            localStorage.setItem('electrodeModelUrl', electrodeUrl);
+            
+            console.log("Created STL blob URLs using the first two STL files:", personUrl, electrodeUrl);
+            console.log("File names used:", stlFiles[0], stlFiles[1]);
+            
+            toast.success('Facial landmarks processed successfully!');
+            
+            // Navigate to the result page to show the processed models
+            navigate('/result');
+          } else {
+            throw new Error(`Could not find expected STL files in the zip archive. Files found: ${Object.keys(zipContents.files).join(', ')}`);
+          }
+        }
+      } else {
+        // Handle error response
+        let errorMessage = `Processing failed: ${response.status} ${response.statusText}`;
+        try {
+          const errorText = await response.text();
+          if (errorText) {
+            errorMessage = errorText;
+          }
+        } catch (e) {
+          // Ignore error when parsing response text
+        }
+        
+        console.error('Processing error:', errorMessage);
+        toast.error(errorMessage);
+      }
+    } catch (error) {
+      console.error('Error processing files:', error);
+      toast.error('Failed to process files: ' + (error instanceof Error ? error.message : String(error)));
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -158,14 +271,25 @@ const Enter = () => {
           <div className="mt-8 flex flex-col items-center">
             <Button 
               onClick={handleSubmit}
-              disabled={!faceImage || !headModel}
-              className="bg-maroon hover:bg-maroon/80 text-white px-8 py-2 rounded-md"
+              disabled={!faceImage || !headModel || isUploading}
+              className="bg-maroon hover:bg-maroon/80 text-white px-8 py-2 rounded-md relative"
             >
-              Create Model
+              {isUploading ? (
+                <>
+                  <span className="opacity-0">Create Model</span>
+                  <span className="absolute inset-0 flex items-center justify-center">
+                    Uploading...
+                  </span>
+                </>
+              ) : (
+                'Create Model'
+              )}
             </Button>
             
             <p className="text-sm text-muted-foreground mt-4 text-center">
-              Upload both files to create your custom 3D model
+              {isUploading 
+                ? 'Uploading files to server, please wait...' 
+                : 'Upload both files to create your custom 3D model'}
             </p>
           </div>
         </div>
