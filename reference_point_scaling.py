@@ -271,4 +271,4 @@ def shoulder_along_z(vertices):
 
     #Finally, take this data and 
 
-    return false;
+    return False
