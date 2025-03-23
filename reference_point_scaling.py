@@ -181,10 +181,7 @@ def align_points(original_pts, ref_A, ref_B):
     
     return (M_extra @ np.column_stack([transformed, np.ones(4)]).T).T[:, :3]
 
-
-
-# Example usage
-if __name__ == "__main__":
+def get_scaled_reference_points(stl_file, original_pts):
     stl_file = "head_model.stl"
 
     # Step 1: Read the STL file
@@ -210,10 +207,6 @@ if __name__ == "__main__":
     # Our nose point and our back of head point are our reference points.
     ref_A = nose
     ref_D = back_head
-    
-    # Load the original points
-    point_file = "reference_points.xyz"
-    original_pts = np.loadtxt(point_file)
 
     # Align the points to the reference positions
     new_pts = align_points(original_pts, ref_A, ref_D)
