@@ -109,7 +109,7 @@ body {
   }
 
   .page-title {
-    @apply text-5xl md:text-7xl font-light tracking-tight text-white mb-12 opacity-0 animate-fade-in-up text-center;
+    @apply text-5xl md:text-7xl font-light tracking-tight text-white opacity-0 animate-fade-in-up text-center;
     animation-delay: 300ms;
   }
 
@@ -147,5 +147,47 @@ body {
     justify-content: center;
     align-items: center;
   }
+}
+
+@font-face {
+  font-family: 'F37 Zagma';
+  src: url('/fonts/F37Zagma-Regular.woff2') format('woff2'),
+       url('/fonts/F37Zagma-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'F37 Zagma';
+  src: url('/fonts/F37Zagma-Bold.woff2') format('woff2'),
+       url('/fonts/F37Zagma-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'F37 Zagma';
+  src: url('/fonts/F37Zagma-Light.woff2') format('woff2'),
+       url('/fonts/F37Zagma-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease forwards;
 }
 

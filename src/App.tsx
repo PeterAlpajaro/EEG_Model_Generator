@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,6 +10,7 @@ import Enter from "./pages/Enter";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 import Result from "./pages/Result";
+import Instructions from '@/pages/Instructions';
 
 // AnimationWrapper component to handle route transitions
 const AnimationWrapper = () => {
@@ -20,6 +20,7 @@ const AnimationWrapper = () => {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Index />} />
+        <Route path="/instructions" element={<Instructions />} />
         <Route path="/enter" element={<Enter />} />
         <Route path="/about" element={<About />} />
         <Route path="/result" element={<Result />} />
