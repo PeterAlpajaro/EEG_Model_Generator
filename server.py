@@ -74,5 +74,14 @@ def upload_file():
     </form>
     '''
 
+@app.route('/shutdown', methods=['GET'])
+def shutdown():
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
+    return 'Server shutting down...'
+
+
 if __name__ == '__main__':
     app.run(port=8080)

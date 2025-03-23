@@ -21,7 +21,7 @@ def find_neck_y(vertices):
         smallest_x = np.min(sorted_vertices_y[i:i+block_size, 0])
         print(largest_x, smallest_x)
         # Find the difference in x values
-        x_diff = largest_x - smallest_x
+        x_diff = abs(largest_x - smallest_x)
         if x_diff < min_x_diff:
             min_x_diff = x_diff
             min_x_diff_index = i
@@ -183,7 +183,8 @@ def align_points(original_pts, ref_A, ref_B):
     return (M_extra @ np.column_stack([transformed, np.ones(4)]).T).T[:, :3]
 
 def get_scaled_reference_points(stl_file, original_pts):
-    stl_file = "head_model.stl"
+    stl_file = stl_file
+    final_path = stl_file
 
     # Step 1: Read the STL file
     try:
@@ -199,13 +200,41 @@ def get_scaled_reference_points(stl_file, original_pts):
     #and the inion is facing towards the negative x-axis.
 
     # We can determine which axis is shoulder-left-to-right by finding the extremeities distances.
-
-    if shoulder_along_z():
+    if not shoulder_along_z(vertices):
         # Rotate the model so that the nasion is facing towards postive/negative x-axis
-        D = np.array([0, 0, 1])
+        mesh = pv.read(final_path)
+        
+        # Determine the center point to rotate around
+        center = mesh.center
+        
+        #Rotate the model 90 degrees around the y-axis
+        rotated_mesh = mesh.rotate_y(90, point=center, inplace=False)
+
+        rotated_mesh.save("output_stl/rotated_model.stl")
+        final_path = "output_stl/rotated_model.stl"
+
+        vertices = rotated_mesh.points
 
     
     nose, back_head = find_nose_and_back_of_head(vertices, neck_height)
+
+    # If the user is facing forward, the nose should lie below, so if the nose is above the back of the head, we should rotate the model 180.
+    if nose[1] > back_head[1]:
+        # Rotate the model so that the nasion is facing towards postive/negative x-axis
+        mesh = pv.read(final_path)
+        
+        # Determine the center point to rotate around
+        center = mesh.center
+        
+        #Rotate the model 180 degrees around the y-axis
+        rotated_mesh = mesh.rotate_y(180, point=center, inplace=False)
+
+        rotated_mesh.save("output_stl/rotated_model.stl")
+        final_path = "output_stl/rotated_model.stl"
+
+        vertices = rotated_mesh.points
+
+        print("MODEL ROTATED 180 DEGREES")
     
     print("Nose, back of head found, moving on")   
 
@@ -259,16 +288,37 @@ def get_scaled_reference_points(stl_file, original_pts):
     # plotter.show()
 
     # ---------------------------------------------------------------------------
-    return 3
+    return final_path, new_pts
 
 
 # Determine whether the shoulders are along the z-axis
 def shoulder_along_z(vertices):
     # We can check this by finding the distance along z and seeing if the maximum is larger than the distance along x.
+    
     #First, sort the vertices by y
     sorted_vertices_y = vertices[vertices[:, 1].argsort()]
+    
     #Now, in blocks, find the z and x distance between points.
-
-    #Finally, take this data and 
-
-    return False
+    max_x_diff = 0
+    max_z_diff = 0
+    block_size = 10
+    for i in range(0, len(sorted_vertices_y), block_size):
+        # Find the largest and smallest x_value in that block
+        largest_x = np.max(sorted_vertices_y[i:i+block_size, 0])
+        smallest_x = np.min(sorted_vertices_y[i:i+block_size, 0])
+        largest_z = np.max(sorted_vertices_y[i:i+block_size, 2])
+        smallest_z = np.min(sorted_vertices_y[i:i+block_size, 2])
+        # Find the difference in x values
+        x_diff = abs(largest_x - smallest_x)
+        if x_diff > max_x_diff:
+            max_x_diff = x_diff
+        z_diff = abs(largest_z - smallest_z)
+        if z_diff > max_z_diff:
+            max_z_diff = z_diff
+    
+    if max_z_diff > max_x_diff:
+        print("SHOULDERS ALIGNED ALONG Z-AXIS -> MUST ROTATE MODEL")
+        return True
+    else:
+        print("SHOULDERS ALIGNED ALONG X-AXIS -> NO ROTATION NEEDED")
+        return False
